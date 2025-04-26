@@ -13,7 +13,9 @@ const (
 )
 
 var (
-	Port string
+	Port          string
+	JwtSignKey    string
+	JwtExpireTime int64 // JWT过期时间，单位分钟
 )
 
 func initLogConfig(logLevel string) {
@@ -26,7 +28,7 @@ func initLogConfig(logLevel string) {
 	logrus.SetReportCaller(true)
 	// 日志格式改为JSON格式
 	logrus.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat: TimeFormat,	
+		TimestampFormat: TimeFormat,
 	})
 
 }
@@ -35,14 +37,19 @@ func init() {
 	logs.Debug(nil, "开始加载程序配置")
 	// 从环境变量中读取配置
 	viper.SetDefault("LOG_LEVEL", "debug")
-
 	// 获取程序启动端口号配置
 	viper.SetDefault("PORT", ":8080")
+	// 获取JWT签名密钥配置
+	viper.SetDefault("JWT_SIGN_KEY", "bobbybai")
+	// 获取JWT过期时间配置
+	viper.SetDefault("JWT_EXPIRE_TIME", 120)
 
 	viper.AutomaticEnv()
 	// 获取配置信息
 	logLevel := viper.GetString("LOG_LEVEL")
 	Port = viper.GetString("PORT")
+	JwtSignKey = viper.GetString("JWT_SIGN_KEY")
+	JwtExpireTime = viper.GetInt64("JWT_EXPIRE_TIME")
 	// 初始化日志配置
 	initLogConfig(logLevel)
 }
