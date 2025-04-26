@@ -20,6 +20,23 @@ var (
 	Password      string
 )
 
+// ReturnData 定义返回数据的结构体
+type ReturnData struct {
+	Status  int                    `json:"status"`
+	Message string                 `json:"message"`
+	Data    map[string]interface{} `json:"data"`
+}
+
+// NewReturnData 构造函数
+func NewReturnData(status int, message string, data map[string]interface{}) *ReturnData {
+	returnData := &ReturnData{}
+	returnData.Status = 200
+	returnData.Message = message
+	data = make(map[string]interface{})
+	returnData.Data = data
+	return returnData
+}
+
 func initLogConfig(logLevel string) {
 	if logLevel == "debug" {
 		logrus.SetLevel(logrus.DebugLevel)
@@ -32,7 +49,6 @@ func initLogConfig(logLevel string) {
 	logrus.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: TimeFormat,
 	})
-
 }
 
 func init() {

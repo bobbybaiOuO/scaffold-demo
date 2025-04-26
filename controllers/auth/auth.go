@@ -18,11 +18,11 @@ type UserInfo struct {
 func Login(c *gin.Context) {
 	// 1. 从请求中获取用户名和密码
 	userInfo := UserInfo{}
+	returnData := config.NewReturnData(200, "success", nil)
 	if err := c.ShouldBindJSON(&userInfo); err != nil {
-		c.JSON(200, gin.H{
-			"message": err.Error(),
-			"status":  401,
-		})
+		returnData.Status = 401
+		returnData.Message = err.Error()
+		c.JSON(200, returnData)
 		return
 	}
 	logs.Debug(map[string]interface{}{"userInfo": userInfo.Username, "password": userInfo.Password}, "开始验证登录信息")
@@ -40,13 +40,9 @@ func Login(c *gin.Context) {
 		}
 		// token 生成成功，返回给客户端
 		logs.Info(map[string]interface{}{"userInfo": userInfo.Username}, "用户名密码正确,登录成功")
-		data := make(map[string]interface{})
-		data["token"] = token
-		c.JSON(200, gin.H{
-			"message": "登录成功",
-			"status":  200,
-			"data":    data,
-		})
+		returnData.Message = "登录成功"
+		returnData.Data["token"] = token
+		c.JSON(200, returnData)
 		return
 	} else {
 		// 用户名或密码错误

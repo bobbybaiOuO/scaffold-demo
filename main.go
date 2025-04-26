@@ -3,6 +3,7 @@ package main
 import (
 	"scaffold-demo/config"
 	_ "scaffold-demo/config"
+	"scaffold-demo/middlewares"
 	"scaffold-demo/routers"
 	"scaffold-demo/utils/logs"
 
@@ -13,6 +14,7 @@ func main() {
 	// 1. 加载程序配置
 	// 2. 配置Gin
 	r := gin.Default()
+	r.Use(middlewares.JwtAuth)
 	logs.Info(nil, "server start")
 	// 3. 注册路由
 	routers.RegisterRouters(r)
