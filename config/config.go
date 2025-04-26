@@ -16,6 +16,8 @@ var (
 	Port          string
 	JwtSignKey    string
 	JwtExpireTime int64 // JWT过期时间，单位分钟
+	UserName      string
+	Password      string
 )
 
 func initLogConfig(logLevel string) {
@@ -35,14 +37,17 @@ func initLogConfig(logLevel string) {
 
 func init() {
 	logs.Debug(nil, "开始加载程序配置")
-	// 从环境变量中读取配置
+	// 配置日志等级
 	viper.SetDefault("LOG_LEVEL", "debug")
-	// 获取程序启动端口号配置
+	// 配置程序启动端口号
 	viper.SetDefault("PORT", ":8080")
-	// 获取JWT签名密钥配置
+	// 配置JWT签名密钥
 	viper.SetDefault("JWT_SIGN_KEY", "bobbybai")
-	// 获取JWT过期时间配置
+	// 配置JWT过期时间
 	viper.SetDefault("JWT_EXPIRE_TIME", 120)
+	// 配置默认用户名和密码
+	viper.SetDefault("USER_NAME", "bobby")
+	viper.SetDefault("PASSWORD", "123456")
 
 	viper.AutomaticEnv()
 	// 获取配置信息
@@ -50,6 +55,8 @@ func init() {
 	Port = viper.GetString("PORT")
 	JwtSignKey = viper.GetString("JWT_SIGN_KEY")
 	JwtExpireTime = viper.GetInt64("JWT_EXPIRE_TIME")
+	UserName = viper.GetString("USER_NAME")
+	Password = viper.GetString("PASSWORD")
 	// 初始化日志配置
 	initLogConfig(logLevel)
 }
